@@ -145,8 +145,6 @@ Este projeto foi desenvolvido no âmbito da unidade curricular de **Segurança I
 ### Autor
 
 **Duarte Cunha**  
-Número de Aluno: 2024271  
-Email: [contacto académico]
 
 ### Orientação
 
@@ -161,16 +159,6 @@ Este projeto é desenvolvido para fins académicos. Todos os direitos reservados
 
 ---
 
-## 🦉 Screenshots
-
-### Splash Screen
-![Splash](docs/images/splash.png)
-
-### Dashboard
-![Dashboard](docs/images/dashboard.png)
-
-### Alertas
-![Alerts](docs/images/alerts.png)
 
 ---
 
