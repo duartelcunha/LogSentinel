@@ -1,0 +1,28 @@
+# Ficheiro de log de exemplo - auth.log
+# Log Sentinel v2.0 - Logs de teste para demonstração
+# Contém exemplos de ataques brute-force e acessos suspeitos
+
+Jan 30 08:15:22 server sshd[12345]: Accepted password for admin from 192.168.1.10 port 22 ssh2
+Jan 30 08:16:45 server sshd[12346]: Failed password for admin from 10.0.0.50 port 22 ssh2
+Jan 30 08:16:47 server sshd[12347]: Failed password for admin from 10.0.0.50 port 22 ssh2
+Jan 30 08:16:49 server sshd[12348]: Failed password for admin from 10.0.0.50 port 22 ssh2
+Jan 30 08:16:51 server sshd[12349]: Failed password for admin from 10.0.0.50 port 22 ssh2
+Jan 30 08:16:53 server sshd[12350]: Failed password for admin from 10.0.0.50 port 22 ssh2
+Jan 30 08:16:55 server sshd[12351]: Failed password for admin from 10.0.0.50 port 22 ssh2
+Jan 30 08:17:01 server sshd[12352]: Failed password for invalid user root from 10.0.0.50 port 22 ssh2
+Jan 30 08:17:05 server sshd[12353]: Failed password for invalid user test from 10.0.0.50 port 22 ssh2
+Jan 30 08:18:30 server sshd[12354]: Accepted password for user1 from 192.168.1.15 port 22 ssh2
+Jan 30 08:20:15 server sudo: user1 : TTY=pts/0 ; PWD=/home/user1 ; USER=root ; COMMAND=/bin/cat /etc/shadow
+Jan 30 08:25:00 server sshd[12360]: Failed password for admin from 172.16.0.100 port 22 ssh2
+Jan 30 08:25:02 server sshd[12361]: Failed password for admin from 172.16.0.100 port 22 ssh2
+Jan 30 08:25:04 server sshd[12362]: Failed password for admin from 172.16.0.100 port 22 ssh2
+Jan 30 08:25:06 server sshd[12363]: Failed password for admin from 172.16.0.100 port 22 ssh2
+Jan 30 08:25:08 server sshd[12364]: Failed password for admin from 172.16.0.100 port 22 ssh2
+Jan 30 08:30:00 server sshd[12370]: Accepted publickey for deploy from 192.168.1.20 port 22 ssh2
+Jan 30 08:35:22 server sshd[12375]: Invalid user hacker from 203.0.113.50 port 22
+Jan 30 08:35:24 server sshd[12376]: Failed password for invalid user hacker from 203.0.113.50 port 22 ssh2
+Jan 30 08:40:00 server sshd[12380]: Connection closed by authenticating user admin 192.168.1.10 port 22
+Jan 30 09:00:00 server sshd[12400]: Accepted password for admin from 192.168.1.10 port 22 ssh2
+Jan 30 09:15:33 server sudo: admin : TTY=pts/1 ; PWD=/root ; USER=root ; COMMAND=/usr/bin/apt update
+Jan 30 09:30:00 server sshd[12410]: session opened for user admin by (uid=0)
+Jan 30 10:00:00 server sshd[12420]: session closed for user admin

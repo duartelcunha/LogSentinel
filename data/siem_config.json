@@ -1,0 +1,64 @@
+{
+  "siem_integration": {
+    "enabled": true,
+    "description": "Configuração de integração SIEM do Log Sentinel v2.0"
+  },
+  "connectors": [
+    {
+      "name": "Local File Export",
+      "type": "file",
+      "enabled": true,
+      "filepath": "data/siem_events.jsonl",
+      "max_size_mb": 50,
+      "rotate": true,
+      "description": "Exporta eventos para ficheiro local em formato JSON Lines"
+    },
+    {
+      "name": "Syslog Server",
+      "type": "syslog",
+      "enabled": false,
+      "host": "localhost",
+      "port": 514,
+      "protocol": "udp",
+      "facility": "LOCAL0",
+      "description": "Envia eventos para servidor Syslog (desativado por padrão)"
+    },
+    {
+      "name": "Webhook",
+      "type": "webhook",
+      "enabled": false,
+      "url": "https://your-siem.example.com/api/events",
+      "method": "POST",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "auth_token": null,
+      "timeout": 10,
+      "description": "Envia eventos via HTTP POST (desativado por padrão)"
+    },
+    {
+      "name": "Elasticsearch",
+      "type": "elasticsearch",
+      "enabled": false,
+      "host": "localhost",
+      "port": 9200,
+      "index": "logsentinel",
+      "use_ssl": false,
+      "username": null,
+      "password": null,
+      "description": "Envia eventos para Elasticsearch/ELK Stack (desativado por padrão)"
+    }
+  ],
+  "event_settings": {
+    "include_raw_log": true,
+    "include_ml_score": true,
+    "max_message_length": 1000,
+    "severity_filter": ["CRITICAL", "HIGH", "MEDIUM"]
+  },
+  "notes": {
+    "syslog": "Para Syslog, configure o servidor rsyslog ou syslog-ng para receber mensagens na porta configurada",
+    "elasticsearch": "Para ELK, certifique-se que o índice existe ou que o Elasticsearch está configurado para criar índices automaticamente",
+    "webhook": "Para Webhook, configure o endpoint do seu SIEM (Splunk, QRadar, etc.) para receber eventos JSON",
+    "splunk": "Para Splunk, use o tipo 'webhook' com o HEC (HTTP Event Collector) endpoint"
+  }
+}
